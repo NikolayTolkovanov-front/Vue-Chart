@@ -2,18 +2,52 @@
   <div class="content">
     <div class="container">
       <div class="Search__container">
-        <input
-          v-model="package"
-          class="Search__input"
-          @keyup.enter="requestData"
-          placeholder="npm package name"
-          type="search" name="search"
-        >
-        <button class="Search__button" @click="requestData">Find</button>
-        <span class="Search__icon" @click.prevent="toggleSettings()">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" enable-background="new 0 0 54 54"><path d="M51.22 21h-5.052c-.812 0-1.481-.447-1.792-1.197s-.153-1.54.42-2.114l3.572-3.571c.525-.525.814-1.224.814-1.966 0-.743-.289-1.441-.814-1.967l-4.553-4.553c-1.05-1.05-2.881-1.052-3.933 0l-3.571 3.571c-.574.573-1.366.733-2.114.421-.75-.311-1.197-.98-1.197-1.792v-5.052c0-1.533-1.247-2.78-2.78-2.78h-6.44c-1.533 0-2.78 1.247-2.78 2.78v5.052c0 .812-.447 1.481-1.197 1.792-.748.313-1.54.152-2.114-.421l-3.571-3.571c-1.052-1.052-2.883-1.05-3.933 0l-4.553 4.553c-.525.525-.814 1.224-.814 1.967 0 .742.289 1.44.814 1.966l3.572 3.571c.573.574.73 1.364.42 2.114s-.98 1.197-1.792 1.197h-5.052c-1.533 0-2.78 1.247-2.78 2.78v6.439c0 1.534 1.247 2.781 2.78 2.781h5.052c.812 0 1.481.447 1.792 1.197s.153 1.54-.42 2.114l-3.572 3.571c-.525.525-.814 1.224-.814 1.966 0 .743.289 1.441.814 1.967l4.553 4.553c1.051 1.051 2.881 1.053 3.933 0l3.571-3.572c.574-.573 1.363-.731 2.114-.42.75.311 1.197.98 1.197 1.792v5.052c0 1.533 1.247 2.78 2.78 2.78h6.439c1.533 0 2.78-1.247 2.78-2.78v-5.052c0-.812.447-1.481 1.197-1.792.751-.312 1.54-.153 2.114.42l3.571 3.572c1.052 1.052 2.883 1.05 3.933 0l4.553-4.553c.525-.525.814-1.224.814-1.967 0-.742-.289-1.44-.814-1.966l-3.572-3.571c-.573-.574-.73-1.364-.42-2.114s.981-1.197 1.793-1.197h5.052c1.533 0 2.78-1.247 2.78-2.78v-6.44c0-1.533-1.247-2.78-2.78-2.78zm.78 9.22c0 .43-.35.78-.78.78h-5.052c-1.624 0-3.019.932-3.64 2.432-.622 1.5-.295 3.146.854 4.294l3.572 3.571c.305.305.305.8 0 1.104l-4.553 4.553c-.304.304-.799.306-1.104 0l-3.571-3.572c-1.149-1.149-2.794-1.474-4.294-.854-1.5.621-2.432 2.016-2.432 3.64v5.052c0 .43-.35.78-.78.78h-6.44c-.43 0-.78-.35-.78-.78v-5.052c0-1.624-.932-3.019-2.432-3.64-.503-.209-1.021-.311-1.533-.311-1.014 0-1.997.4-2.761 1.164l-3.571 3.572c-.306.306-.801.304-1.104 0l-4.553-4.553c-.305-.305-.305-.8 0-1.104l3.572-3.571c1.148-1.148 1.476-2.794.854-4.294-.621-1.499-2.016-2.431-3.64-2.431h-5.052c-.43 0-.78-.35-.78-.78v-6.44c0-.43.35-.78.78-.78h5.052c1.624 0 3.019-.932 3.64-2.432.622-1.5.295-3.146-.854-4.294l-3.572-3.571c-.305-.305-.305-.8 0-1.104l4.553-4.553c.304-.305.799-.305 1.104 0l3.571 3.571c1.147 1.147 2.792 1.476 4.294.854 1.5-.62 2.432-2.015 2.432-3.639v-5.052c0-.43.35-.78.78-.78h6.439c.431 0 .781.35.781.78v5.052c0 1.624.932 3.019 2.432 3.64 1.502.622 3.146.294 4.294-.854l3.571-3.571c.306-.305.801-.305 1.104 0l4.553 4.553c.305.305.305.8 0 1.104l-3.572 3.571c-1.148 1.148-1.476 2.794-.854 4.294.621 1.5 2.016 2.432 3.64 2.432h5.052c.43-.001.78.349.78.779v6.44zM27 18c-4.963 0-9 4.037-9 9s4.037 9 9 9 9-4.037 9-9-4.037-9-9-9zm0 16c-3.859 0-7-3.141-7-7s3.141-7 7-7 7 3.141 7 7-3.141 7-7 7z"/>
-          </svg>
-        </span>
+        <div class="Search__inputs">
+          <input
+            v-model="inputFunction"
+            class="Search__input"
+            placeholder="функция"
+            type="search" name="search"
+          >
+          <input
+            v-model.number="epsilon"
+            class="Search__input"
+            placeholder="погрешность"
+            type="search" name="search"
+          >
+          <input
+            v-model.number="startPoint"
+            class="Search__input"
+            placeholder="начальная точка"
+            type="search" name="search"
+          >
+          <input
+            v-model.number="endPoint"
+            class="Search__input"
+            placeholder="конечная точка"
+            type="search" name="search"
+          >
+          <input
+            v-model.number="step"
+            class="Search__input"
+            placeholder="шаг"
+            type="search" name="search"
+          >
+          <input
+            v-model="package"
+            class="Search__input"
+            @keyup.enter="requestData"
+            placeholder="npm package name"
+            type="search" name="search"
+          >
+        </div>
+        <div class="Search-functions">
+          <button class="Search__button" @click="requestData">Find</button>
+          <span class="Search__icon" @click.prevent="toggleSettings()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54" enable-background="new 0 0 54 54"><path d="M51.22 21h-5.052c-.812 0-1.481-.447-1.792-1.197s-.153-1.54.42-2.114l3.572-3.571c.525-.525.814-1.224.814-1.966 0-.743-.289-1.441-.814-1.967l-4.553-4.553c-1.05-1.05-2.881-1.052-3.933 0l-3.571 3.571c-.574.573-1.366.733-2.114.421-.75-.311-1.197-.98-1.197-1.792v-5.052c0-1.533-1.247-2.78-2.78-2.78h-6.44c-1.533 0-2.78 1.247-2.78 2.78v5.052c0 .812-.447 1.481-1.197 1.792-.748.313-1.54.152-2.114-.421l-3.571-3.571c-1.052-1.052-2.883-1.05-3.933 0l-4.553 4.553c-.525.525-.814 1.224-.814 1.967 0 .742.289 1.44.814 1.966l3.572 3.571c.573.574.73 1.364.42 2.114s-.98 1.197-1.792 1.197h-5.052c-1.533 0-2.78 1.247-2.78 2.78v6.439c0 1.534 1.247 2.781 2.78 2.781h5.052c.812 0 1.481.447 1.792 1.197s.153 1.54-.42 2.114l-3.572 3.571c-.525.525-.814 1.224-.814 1.966 0 .743.289 1.441.814 1.967l4.553 4.553c1.051 1.051 2.881 1.053 3.933 0l3.571-3.572c.574-.573 1.363-.731 2.114-.42.75.311 1.197.98 1.197 1.792v5.052c0 1.533 1.247 2.78 2.78 2.78h6.439c1.533 0 2.78-1.247 2.78-2.78v-5.052c0-.812.447-1.481 1.197-1.792.751-.312 1.54-.153 2.114.42l3.571 3.572c1.052 1.052 2.883 1.05 3.933 0l4.553-4.553c.525-.525.814-1.224.814-1.967 0-.742-.289-1.44-.814-1.966l-3.572-3.571c-.573-.574-.73-1.364-.42-2.114s.981-1.197 1.793-1.197h5.052c1.533 0 2.78-1.247 2.78-2.78v-6.44c0-1.533-1.247-2.78-2.78-2.78zm.78 9.22c0 .43-.35.78-.78.78h-5.052c-1.624 0-3.019.932-3.64 2.432-.622 1.5-.295 3.146.854 4.294l3.572 3.571c.305.305.305.8 0 1.104l-4.553 4.553c-.304.304-.799.306-1.104 0l-3.571-3.572c-1.149-1.149-2.794-1.474-4.294-.854-1.5.621-2.432 2.016-2.432 3.64v5.052c0 .43-.35.78-.78.78h-6.44c-.43 0-.78-.35-.78-.78v-5.052c0-1.624-.932-3.019-2.432-3.64-.503-.209-1.021-.311-1.533-.311-1.014 0-1.997.4-2.761 1.164l-3.571 3.572c-.306.306-.801.304-1.104 0l-4.553-4.553c-.305-.305-.305-.8 0-1.104l3.572-3.571c1.148-1.148 1.476-2.794.854-4.294-.621-1.499-2.016-2.431-3.64-2.431h-5.052c-.43 0-.78-.35-.78-.78v-6.44c0-.43.35-.78.78-.78h5.052c1.624 0 3.019-.932 3.64-2.432.622-1.5.295-3.146-.854-4.294l-3.572-3.571c-.305-.305-.305-.8 0-1.104l4.553-4.553c.304-.305.799-.305 1.104 0l3.571 3.571c1.147 1.147 2.792 1.476 4.294.854 1.5-.62 2.432-2.015 2.432-3.639v-5.052c0-.43.35-.78.78-.78h6.439c.431 0 .781.35.781.78v5.052c0 1.624.932 3.019 2.432 3.64 1.502.622 3.146.294 4.294-.854l3.571-3.571c.306-.305.801-.305 1.104 0l4.553 4.553c.305.305.305.8 0 1.104l-3.572 3.571c-1.148 1.148-1.476 2.794-.854 4.294.621 1.5 2.016 2.432 3.64 2.432h5.052c.43-.001.78.349.78.779v6.44zM27 18c-4.963 0-9 4.037-9 9s4.037 9 9 9 9-4.037 9-9-4.037-9-9-9zm0 16c-3.859 0-7-3.141-7-7s3.141-7 7-7 7 3.141 7 7-3.141 7-7 7z"/>
+            </svg>
+          </span>
+        </div>
       </div>
       <div class="Search__settings" v-if="showSettings">
         <datepicker input-class="Search__input" placeholder="Start Date" v-model="periodStart" name="start-date" v-on:selected="validateDataRequest()"></datepicker>
@@ -39,48 +73,13 @@
       </div>
       </div>
 
-      <package-info :package-name="packageName" :total-downloads="totalDownloads" :period="formattedPeriod" v-if="loaded"/>
       <div class="Chart__container" v-if="loaded">
         <div class="Chart__title">
-          <h2>Downloads per Day <span>{{ formattedPeriod }}</span></h2>
-          <DownloadButton :name="packageName + '-daily'" :link="dailyPng"/>
+          <h2>My graphic</h2>
         </div>
         <hr>
         <div class="Chart__content">
-          <line-chart chart-id="line-daily" v-if="loaded" :chart-data="downloads" :chart-labels="labels" @generate="setDailyPng"/>
-        </div>
-      </div>
-
-      <div class="Chart__container" v-if="loaded">
-        <div class="Chart__title">
-          <h2>Downloads per Week <span>{{ formattedPeriod }}</span></h2>
-          <DownloadButton :name="packageName + '-weekly'" :link="weeklyPng"/>
-        </div>
-        <hr>
-        <div class="Chart__content">
-          <line-chart chart-id="line-weekly" v-if="loaded" :chart-data="downloadsWeek" :chart-labels="labelsWeek" @generate="setWeeklyPng"/>
-        </div>
-      </div>
-
-      <div class="Chart__container" v-if="loaded">
-        <div class="Chart__title">
-          <h2>Downloads per Month <span>{{ formattedPeriod }}</span></h2>
-          <DownloadButton :name="packageName + '-monthly'" :link="monthlyPng"/>
-        </div>
-        <hr>
-        <div class="Chart__content">
-          <line-chart v-if="loaded" chart-id="line-monthly" :chart-data="downloadsMonth" :chart-labels="labelsMonth" @generate="setMonthlyPng"/>
-        </div>
-      </div>
-
-      <div class="Chart__container" v-if="loaded">
-        <div class="Chart__title">
-          <h2>Downloads per Year <span>{{ formattedPeriod }}</span></h2>
-          <DownloadButton :name="packageName + '-yearly'" :link="yearlyPng"/>
-        </div>
-        <hr>
-        <div class="Chart__content">
-          <bar-chart v-if="loaded" chart-id="bar-yearly" :chart-data="downloadsYear" :chart-labels="labelsYear" @generate="setYearlyPng"/>
+          <line-chart chart-id="line-daily" v-if="loaded" :chart-data="yValues" :chart-labels="xValues" @generate="setDailyPng"/>
         </div>
       </div>
     </div>
@@ -105,6 +104,7 @@
   } from '../utils/dateFormatter'
 
   import { removeDuplicate, groupData } from '../utils/downloadFormatter.js'
+  import { evaluate } from 'mathjs'
 
   export default {
     components: {
@@ -125,6 +125,13 @@
 
     data () {
       return {
+        inputFunction: 'sin(x)',
+        epsilon: 1,
+        startPoint: 0.1,
+        endPoint: 10,
+        step: 0.1,
+        xValues: [],
+        yValues: [],
         package: '',
         packageName: '',
         loaded: false,
@@ -183,6 +190,10 @@
         this.loaded = false
         this.showError = false
       },
+      getValidateFunction (arg) {
+        let result = evaluate(this.inputFunction, { x: arg })
+        return result
+      },
       requestData () {
         if (this.package === null || this.package === '' || this.package === 'undefined') {
           this.showError = true
@@ -191,6 +202,16 @@
         }
         this.resetState()
         this.loading = true
+        this.xValues = []
+        this.yValues = []
+
+        for (let i = this.startPoint; i <= this.endPoint; i += this.step) {
+          let normalIterator = i.toPrecision(2)
+
+          this.xValues = [...this.xValues, normalIterator]
+          this.yValues = [...this.yValues, this.getValidateFunction(normalIterator)]
+        }
+
         axios.get(`https://api.npmjs.org/downloads/range/${this.period}/${this.package}`)
           .then(response => {
             this.rawData = response.data.downloads

@@ -89,8 +89,8 @@
           {
             label: 'downloads',
             borderColor: '#249EBF',
-            pointBackgroundColor: 'rgba(0,0,0,0)',
-            pointBorderColor: 'rgba(0,0,0,0)',
+            // pointBackgroundColor: 'rgba(0,0,0,0)',
+            // pointBorderColor: 'rgba(0,0,0,0)',
             pointHoverBorderColor: '#249EBF',
             pointHoverBackgroundColor: '#fff',
             pointHoverRadius: 4,
