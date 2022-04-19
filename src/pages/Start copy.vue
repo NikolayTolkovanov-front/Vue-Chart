@@ -33,13 +33,6 @@
             placeholder="шаг"
             type="search" name="search"
           >
-          <input
-            v-model="package"
-            class="Search__input"
-            @keyup.enter="requestData"
-            placeholder="npm package name"
-            type="search" name="search"
-          >
         </div>
         <div class="Search-functions">
           <button class="Search__button" @click="requestData">Find</button>
@@ -51,7 +44,7 @@
       </div>
       <hr>
       <div v-if="loading" class="loading">
-        🔧  Building Charts ...
+        🔧  Building Chart ...
         <div class="sk-cube-grid">
         <div class="sk-cube sk-cube1"></div>
         <div class="sk-cube sk-cube2"></div>
@@ -71,7 +64,7 @@
         </div>
         <hr>
         <div class="Chart__content">
-          <line-chart chart-id="line-daily" v-if="loaded" :chart-data="yValues" :chart-labels="xValues"/>
+          <line-chart chart-id="line-daily" :chart-data="yValues" :chart-labels="xValues"/>
         </div>
       </div>
     </div>
@@ -96,27 +89,48 @@
         step: 0.1,
         xValues: [],
         yValues: [],
+        packageName: '',
         loaded: false,
         loading: false,
+        downloads: [],
+        labels: [],
         showError: false,
         errorMessage: 'Please enter a package name',
-        package: '',
-        downloads: [],
         periodStart: '',
-        periodEnd: new Date()
+        periodEnd: new Date(),
+        rawData: '',
+        totalDownloads: ''
       }
     },
 
     mounted () {},
-
-    computed: {},
+    computed: {
+      isValidateFuncInput () {
+        return this.inputFunction !== null || this.inputFunction !== '' || this.inputFunction !== 'undefined'
+      },
+      isValidateEpsInput () {
+        return this.epsilon !== 0 || this.epsilon !== null || this.epsilon !== '' || this.epsilon !== 'undefined'
+      },
+      isValidateStartPointInput () {
+        return this.startPoint !== null || this.startPoint !== '' || this.startPoint !== 'undefined'
+      },
+      isValidateEndPointInput () {
+        return this.endPoint !== null || this.endPoint !== '' || this.endPoint !== 'undefined'
+      },
+      isValidateStepInput () {
+        return this.step !== 0 || this.step !== null || this.step !== '' || this.step !== 'undefined'
+      },
+      isvalidateInputs () {
+        return this.isValidateFuncInput && this.isValidateEpsInput && this.isValidateStartPointInput && this.isValidateEndPointInput && this.isValidateStepInput
+      }
+    },
 
     methods: {
       resetState () {
         this.loaded = false
         this.showError = false
       },
-      getValidateFunction (arg) {
+      getNormalizedFunction (arg) {
         let result = evaluate(this.inputFunction, { x: arg })
         return result
       },
@@ -127,7 +141,6 @@
           return
         }
         this.resetState()
-        this.loaded = false
         this.loading = true
         this.xValues = []
         this.yValues = []
@@ -136,12 +149,10 @@
           let normalIterator = i.toPrecision(2)
 
           this.xValues = [...this.xValues, normalIterator]
-          this.yValues = [...this.yValues, this.getValidateFunction(normalIterator)]
+          this.yValues = [...this.yValues, this.getNormalizedFunction(normalIterator)]
         }
-        setTimeout(() => {
-          this.loaded = true
-          this.loading = false
-        }, 0)
+        this.loaded = true
+        this.loading = false
       }
     }
   }
