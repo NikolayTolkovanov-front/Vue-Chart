@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <j-header></j-header>
-    <router-view :key="$route.path"></router-view>
+    <j-start></j-start>
     <j-footer></j-footer>
   </div>
 </template>
@@ -9,16 +9,11 @@
 <script>
 import JHeader from '@/components/Header'
 import JFooter from '@/components/Footer'
+import JStart from '@/pages/Start'
 
 export default {
-  components: { JHeader, JFooter },
-  name: 'app',
-  metaInfo: {
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'theme-color', content: '#ffffff' }
-    ]
-  }
+  components: { JHeader, JFooter, JStart },
+  name: 'app'
 }
 </script>
 

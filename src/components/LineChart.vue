@@ -1,10 +1,8 @@
 <script>
   import { Line } from 'vue-chartjs'
-  import Printable from '@/mixins/Printable'
 
   export default {
     extends: Line,
-    mixins: [Printable],
     props: {
       chartData: {
         type: Array | Object,
@@ -57,12 +55,12 @@
             intersect: false,
             callbacks: {
               title: tooltipItem => {
-                return `🗓 ${tooltipItem[0].xLabel}`
+                return `x: ${tooltipItem[0].xLabel}`
               },
               label: (tooltipItem, data) => {
                 let dataset = data.datasets[tooltipItem.datasetIndex]
                 let currentValue = dataset.data[tooltipItem.index]
-                return `📦 ${currentValue.toLocaleString()}`
+                return `y: ${currentValue.toLocaleString()}`
               }
             }
           },
@@ -89,8 +87,6 @@
           {
             label: 'downloads',
             borderColor: '#249EBF',
-            // pointBackgroundColor: 'rgba(0,0,0,0)',
-            // pointBorderColor: 'rgba(0,0,0,0)',
             pointHoverBorderColor: '#249EBF',
             pointHoverBackgroundColor: '#fff',
             pointHoverRadius: 4,
@@ -102,10 +98,6 @@
           }
         ]
       }, this.options)
-
-      setTimeout(() => {
-        this.download()
-      }, 500)
     },
     methods: {
       formatNumber (num) {

@@ -33,21 +33,17 @@
             placeholder="шаг"
             type="search" name="search"
           >
-          <input
-            v-model="package"
-            class="Search__input"
-            @keyup.enter="requestData"
-            placeholder="npm package name"
-            type="search" name="search"
-          >
         </div>
         <div class="Search-functions">
-          <button class="Search__button" @click="requestData">Find</button>
+          <button class="Search__button" @keyup.enter="makeGraphic" @click="makeGraphic">Find</button>
         </div>
       </div>
 
-      <div class="error-message" v-if="showError">
-       {{ errorMessage }}
+      <div class="error-message" v-if="showInputError">
+       {{ errorInputMessage }}
+      </div>
+      <div class="error-message" v-if="showFunctionError">
+       {{ errorFunctionMessage }}
       </div>
       <hr>
       <div v-if="loading" class="loading">
@@ -74,17 +70,19 @@
           <line-chart chart-id="line-daily" v-if="loaded" :chart-data="yValues" :chart-labels="xValues"/>
         </div>
       </div>
+      <div class="Results__container"></div>
     </div>
   </div>
 </template>
 
 <script>
   import LineChart from '@/components/LineChart'
+  import Results from '@/components/Results'
   import { evaluate } from 'mathjs'
 
   export default {
     components: {
-      LineChart
+      LineChart, Results
     },
 
     data () {
@@ -96,48 +94,71 @@
         step: 0.1,
         xValues: [],
         yValues: [],
+        intervals: [],
         loaded: false,
         loading: false,
-        showError: false,
-        errorMessage: 'Please enter a package name',
-        package: '',
-        downloads: [],
-        periodStart: '',
-        periodEnd: new Date()
+        showInputError: false,
+        showFunctionError: false,
+        errorInputMessage: 'Заполните данные полностью',
+        errorFunctionMessage: 'Введите в поле функцию правильно, пример: tan(x), x^3'
       }
     },
 
-    mounted () {},
-
-    computed: {},
+    computed: {
+      isValidateFuncInput () {
+        return this.inputFunction !== null && this.inputFunction !== '' && this.inputFunction !== 'undefined'
+      },
+      isValidateEpsInput () {
+        return this.epsilon !== 0 && this.epsilon !== null && this.epsilon !== '' && this.epsilon !== 'undefined'
+      },
+      isValidateStartPointInput () {
+        return this.startPoint !== null && this.startPoint !== '' && this.startPoint !== 'undefined'
+      },
+      isValidateEndPointInput () {
+        return this.endPoint !== null && this.endPoint !== '' && this.endPoint !== 'undefined'
+      },
+      isValidateStepInput () {
+        return this.step !== 0 && this.step !== null && this.step !== '' && this.step !== 'undefined'
+      },
+      isValidateInputs () {
+        return this.isValidateFuncInput && this.isValidateEpsInput && this.isValidateStartPointInput && this.isValidateEndPointInput && this.isValidateStepInput
+      }
+    },
 
     methods: {
       resetState () {
         this.loaded = false
-        this.showError = false
+        this.loading = true
+        this.showInputError = false
+        this.showFunctionError = false
+        this.xValues = []
+        this.yValues = []
       },
-      getValidateFunction (arg) {
-        let result = evaluate(this.inputFunction, { x: arg })
-        return result
-      },
-      requestData () {
-        if (this.package === null || this.package === '' || this.package === 'undefined') {
-          this.showError = true
+      makeGraphic () {
+        if (!this.isValidateInputs) {
+          this.showInputError = true
           this.loading = false
           return
         }
         this.resetState()
-        this.loaded = false
-        this.loading = true
-        this.xValues = []
-        this.yValues = []
 
         for (let i = this.startPoint; i <= this.endPoint; i += this.step) {
           let normalIterator = i.toPrecision(2)
+          let resultFunction
+
+          try {
+            resultFunction = evaluate(this.inputFunction, { x: i })
+          } catch (e) {
+            this.showFunctionError = true
+            this.loaded = false
+            this.loading = false
+            return
+          }
 
           this.xValues = [...this.xValues, normalIterator]
-          this.yValues = [...this.yValues, this.getValidateFunction(normalIterator)]
+          this.yValues = [...this.yValues, resultFunction]
         }
+
         setTimeout(() => {
           this.loaded = true
           this.loading = false
@@ -253,6 +274,10 @@
           flex: 1;
         }
     }
+  }
+
+  .Search-functions {
+    align-self: self-start;
   }
 
   .Chart__container {
