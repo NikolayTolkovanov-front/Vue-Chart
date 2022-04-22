@@ -70,28 +70,31 @@
           <line-chart chart-id="line-daily" v-if="loaded" :chart-data="yValues" :chart-labels="xValues"/>
         </div>
       </div>
-      <div class="Results__container"></div>
+      <div class="Results__container" v-if="dihotomyData.length">
+        <result-list :xValue="dihotomyData[0]" :yValue="dihotomyData[1]" :epsilon="epsilon" :steps="dihotomyData[2]"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
   import LineChart from '@/components/LineChart'
-  import Results from '@/components/Results'
+  import ResultList from '@/components/ResultList'
   import { evaluate } from 'mathjs'
 
   export default {
-    components: {
-      LineChart, Results
-    },
+    components: { LineChart, ResultList },
 
     data () {
       return {
         inputFunction: 'sin(x)',
-        epsilon: 1,
+        epsilon: 0.01,
         startPoint: 0.1,
         endPoint: 10,
         step: 0.1,
+        dihotomyData: [],
+        hordData: [],
+        newtonData: [],
         xValues: [],
         yValues: [],
         intervals: [],
@@ -108,18 +111,23 @@
       isValidateFuncInput () {
         return this.inputFunction !== null && this.inputFunction !== '' && this.inputFunction !== 'undefined'
       },
+
       isValidateEpsInput () {
         return this.epsilon !== 0 && this.epsilon !== null && this.epsilon !== '' && this.epsilon !== 'undefined'
       },
+
       isValidateStartPointInput () {
         return this.startPoint !== null && this.startPoint !== '' && this.startPoint !== 'undefined'
       },
+
       isValidateEndPointInput () {
         return this.endPoint !== null && this.endPoint !== '' && this.endPoint !== 'undefined'
       },
+
       isValidateStepInput () {
         return this.step !== 0 && this.step !== null && this.step !== '' && this.step !== 'undefined'
       },
+
       isValidateInputs () {
         return this.isValidateFuncInput && this.isValidateEpsInput && this.isValidateStartPointInput && this.isValidateEndPointInput && this.isValidateStepInput
       }
@@ -134,6 +142,7 @@
         this.xValues = []
         this.yValues = []
       },
+
       makeGraphic () {
         if (!this.isValidateInputs) {
           this.showInputError = true
@@ -143,26 +152,68 @@
         this.resetState()
 
         for (let i = this.startPoint; i <= this.endPoint; i += this.step) {
-          let normalIterator = i.toPrecision(2)
-          let resultFunction
+          let normalIterator = Number(i.toPrecision(2))
 
           try {
-            resultFunction = evaluate(this.inputFunction, { x: i })
+            this.xValues = [...this.xValues, normalIterator]
+            this.yValues = [...this.yValues, this.myFunction(normalIterator)]
           } catch (e) {
             this.showFunctionError = true
             this.loaded = false
             this.loading = false
             return
           }
-
-          this.xValues = [...this.xValues, normalIterator]
-          this.yValues = [...this.yValues, resultFunction]
         }
 
         setTimeout(() => {
           this.loaded = true
           this.loading = false
         }, 0)
+
+        this.FindRoots()
+      },
+
+      myFunction (arg) {
+        return evaluate(this.inputFunction, { x: arg })
+      },
+
+      makeIntervals () {
+        this.intervals = []
+
+        for (let i = 1; i < this.yValues.length; i++) {
+          if (this.yValues[i - 1] * this.yValues[i] < 0) {
+            let a = this.xValues[i - 1]
+            let b = this.xValues[i]
+            this.intervals = [...this.intervals, [a, b]]
+          }
+        }
+
+        console.log('all intervals:', this.intervals)
+      },
+
+      FindRoots () {
+        this.makeIntervals()
+        for (let interval of this.intervals) {
+          this.dihotomyMethod(interval[0], interval[1])
+        }
+      },
+
+      dihotomyMethod (a, b) {
+        let step = 0
+        while ((b - a) / 2 > this.epsilon) {
+          step++
+
+          let x = (a + b) / 2
+
+          if ((this.myFunction(a) * this.myFunction(x)) > 0) {
+            a = x
+          } else {
+            b = x
+          }
+
+          this.dihotomyData = [x, this.myFunction(x), step]
+        }
+        console.log('dihotomyData', this.dihotomyData)
       }
     }
   }
