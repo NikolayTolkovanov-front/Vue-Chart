@@ -14,3 +14,8 @@ body {
 h1, h2, h3, h4 {
   font-family: $heading-font-family;
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+}

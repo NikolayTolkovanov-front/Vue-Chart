@@ -35,7 +35,7 @@
           >
         </div>
         <div class="Search-functions">
-          <button class="Search__button" @keyup.enter="makeGraphic" @click="makeGraphic">Find</button>
+          <button class="Search__button" @keyup.enter="makeContent" @click="makeContent">Find</button>
         </div>
       </div>
 
@@ -71,7 +71,7 @@
         </div>
       </div>
       <div class="Results__container" v-if="dihotomyData.length">
-        <result-list :xValue="dihotomyData[0]" :yValue="dihotomyData[1]" :epsilon="epsilon" :steps="dihotomyData[2]"/>
+        <results-list :overallData="overallData" :dihotomyData="dihotomyData" :hordData="hordData" :newtonData="newtonData"/>
       </div>
     </div>
   </div>
@@ -79,11 +79,11 @@
 
 <script>
   import LineChart from '@/components/LineChart'
-  import ResultList from '@/components/ResultList'
+  import ResultsList from '@/components/ResultsList'
   import { evaluate } from 'mathjs'
 
   export default {
-    components: { LineChart, ResultList },
+    components: { LineChart, ResultsList },
 
     data () {
       return {
@@ -130,6 +130,21 @@
 
       isValidateInputs () {
         return this.isValidateFuncInput && this.isValidateEpsInput && this.isValidateStartPointInput && this.isValidateEndPointInput && this.isValidateStepInput
+      },
+
+      teoreticSteps () {
+        if (this.intervals.length) {
+          let a = this.intervals[0][0]
+          let b = this.intervals[0][1]
+          let teoreticSteps = (Math.log(b - a) - Math.log(this.epsilon)) / Math.log(2) + 1
+          return Math.floor(teoreticSteps)
+        }
+      },
+
+      overallData () {
+        if (this.isValidateEpsInput) {
+          return [this.epsilon, this.teoreticSteps]
+        }
       }
     },
 
@@ -141,6 +156,12 @@
         this.showFunctionError = false
         this.xValues = []
         this.yValues = []
+      },
+
+      makeContent () {
+        this.makeGraphic()
+        this.makeIntervals()
+        this.FindRoots()
       },
 
       makeGraphic () {
@@ -169,8 +190,6 @@
           this.loaded = true
           this.loading = false
         }, 0)
-
-        this.FindRoots()
       },
 
       myFunction (arg) {
@@ -187,33 +206,66 @@
             this.intervals = [...this.intervals, [a, b]]
           }
         }
-
-        console.log('all intervals:', this.intervals)
       },
 
       FindRoots () {
-        this.makeIntervals()
-        for (let interval of this.intervals) {
-          this.dihotomyMethod(interval[0], interval[1])
+        if (this.intervals.length) {
+          for (let interval of this.intervals) {
+            this.dihotomyMethod(interval[0], interval[1])
+            this.hordMethod(interval[0], interval[1])
+            this.newtonMethod(interval[0], interval[1])
+          }
         }
       },
 
       dihotomyMethod (a, b) {
         let step = 0
+        let x = 0
+
         while ((b - a) / 2 > this.epsilon) {
           step++
-
-          let x = (a + b) / 2
+          x = (a + b) / 2
 
           if ((this.myFunction(a) * this.myFunction(x)) > 0) {
             a = x
           } else {
             b = x
           }
-
-          this.dihotomyData = [x, this.myFunction(x), step]
         }
+        this.dihotomyData = [...this.dihotomyData, [x, this.myFunction(x), step]]
+
         console.log('dihotomyData', this.dihotomyData)
+      },
+
+      hordMethod (a, b) {
+        let step = 0
+
+        while (Math.abs(this.myFunction(b)) > this.epsilon) {
+          step++
+          b = b - ((b - a) * this.myFunction(b) / (this.myFunction(b) - this.myFunction(a)))
+        }
+        this.hordData = [...this.hordData, [b, this.myFunction(b), step]]
+
+        console.log('hordData', this.hordData)
+      },
+
+      newtonMethod (a, b) {
+        let step = 0
+        let x = 0
+
+        while ((b - a) / 2 > this.epsilon) {
+          step++
+          x = (a + b) / 2
+
+          if ((this.myFunction(a) * this.myFunction(x)) > 0) {
+            a = x
+          } else {
+            b = x
+          }
+        }
+        this.newtonData = [...this.newtonData, [x, this.myFunction(x), step]]
+
+        console.log('newtonData', this.newtonData)
       }
     }
   }
