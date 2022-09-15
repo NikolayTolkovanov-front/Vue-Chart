@@ -6,7 +6,6 @@
       <p class="Results__overallData-teoretic-steps">teoreticSteps: {{ overallData[1] }}</p>
     </div>
     <hr>
-    <hr>
     <span class="title">Dihotomy:</span>
     <ul class="Results__list">
       <li class="Results__list-item" v-for="item in dihotomyData" :key="item.id">

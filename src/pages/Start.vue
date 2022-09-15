@@ -3,30 +3,35 @@
     <div class="container">
       <div class="Search__container">
         <div class="Search__inputs">
+          <p>Функция: </p>
           <input
             v-model="inputFunction"
             class="Search__input"
             placeholder="функция"
             type="search" name="search"
           >
+          <p>Epsilon: </p>
           <input
             v-model.number="epsilon"
             class="Search__input"
             placeholder="погрешность"
             type="search" name="search"
           >
+          <p>Начальная точка: </p>
           <input
             v-model.number="startPoint"
             class="Search__input"
             placeholder="начальная точка"
             type="search" name="search"
           >
+          <p>Конечная точка: </p>
           <input
             v-model.number="endPoint"
             class="Search__input"
             placeholder="конечная точка"
             type="search" name="search"
           >
+          <p>Шаг: </p>
           <input
             v-model.number="step"
             class="Search__input"
@@ -156,6 +161,9 @@
         this.showFunctionError = false
         this.xValues = []
         this.yValues = []
+        this.dihotomyData = []
+        this.hordData = []
+        this.newtonData = []
       },
 
       makeContent () {
